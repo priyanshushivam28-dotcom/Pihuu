@@ -167,76 +167,78 @@
       <p>You just made my day ❤️</p>
     </section>
   </main>
+<script>
+  const zone = document.getElementById("zone");
+  const yesBtn = document.getElementById("yesBtn");
+  const noBtn = document.getElementById("noBtn");
+  const result = document.getElementById("result");
+  const hint = document.getElementById("hint");
+  const music = document.getElementById("bgMusic");
 
-  <script>
-    const zone = document.getElementById("zone");
-    const yesBtn = document.getElementById("yesBtn");
-    const noBtn = document.getElementById("noBtn");
-    const result = document.getElementById("result");
-    const hint = document.getElementById("hint");
-    const music = document.getElementById("bgMusic");
+  /* -------- CONFETTI -------- */
+  const confettiCanvas = document.getElementById("confettiCanvas");
+  confettiCanvas.width = window.innerWidth;
+  confettiCanvas.height = window.innerHeight;
 
-    const confettiCanvas = document.getElementById("confettiCanvas");
+  const confettiInstance = confetti.create(confettiCanvas, { resize: true });
 
-    function resizeCanvas() {
-      confettiCanvas.width = window.innerWidth;
-      confettiCanvas.height = window.innerHeight;
-    }
-    resizeCanvas();
-    window.addEventListener("resize", resizeCanvas);
-
-    const confettiInstance = confetti.create(confettiCanvas, { resize: true });
-
-    function fireConfetti() {
-      confettiInstance({ particleCount: 300, spread: 140, origin: { y: 0.6 } });
-    }
-
-    let yesScale = 1;
-    function growYes() {
-      yesScale += 0.08;
-      yesBtn.style.transform = translateY(-50%) scale(${yesScale});
-    }
-
-    const noTexts = [
-      "No",
-      "Are you sure? 😶",
-      "Really sure? 🥺",
-      "Think again 😭",
-      "Last chance 💔",
-      "Just click Yes ❤️"
-    ];
-    let noCount = 0;
-
-    function moveNo(px, py) {
-      const z = zone.getBoundingClientRect();
-      const b = noBtn.getBoundingClientRect();
-
-      let newLeft = Math.random() * (z.width - b.width);
-      let newTop = Math.random() * (z.height - b.height);
-
-      noBtn.style.left = newLeft + "px";
-      noBtn.style.top = newTop + "px";
-      noBtn.textContent = noTexts[Math.min(noCount, noTexts.length - 1)];
-      noCount++;
-      growYes();
-    }
-
-    zone.addEventListener("pointermove", e => {
-      const b = noBtn.getBoundingClientRect();
-      const d = Math.hypot(
-        (b.left + b.width / 2) - e.clientX,
-        (b.top + b.height / 2) - e.clientY
-      );
-      if (d < 140) moveNo(e.clientX, e.clientY);
+  function fireConfetti() {
+    confettiInstance({
+      particleCount: 250,
+      spread: 140,
+      startVelocity: 45,
+      origin: { y: 0.6 }
     });
+  }
 
-    yesBtn.addEventListener("click", () => {
-      music.play();
-      zone.style.display = "none";
-      hint.style.display = "none";
-      result.style.display = "block";
-      fireConfetti();
-    });
-  </script>
+  /* -------- YES BUTTON -------- */
+  let yesScale = 1;
+  function growYes() {
+    yesScale += 0.12;
+    yesBtn.style.transform = translateY(-50%) scale(${yesScale});
+  }
+
+  /* -------- NO BUTTON LOGIC -------- */
+  const noTexts = [
+    "No",
+    "Are you sure? 😶",
+    "Really sure? 🥺",
+    "Think again 😭",
+    "Last chance 💔",
+    "Just tap Yes ❤️"
+  ];
+  let noCount = 0;
+
+  function moveNoRandom() {
+    const z = zone.getBoundingClientRect();
+    const b = noBtn.getBoundingClientRect();
+
+    const left = Math.random() * (z.width - b.width);
+    const top  = Math.random() * (z.height - b.height);
+
+    noBtn.style.left = left + "px";
+    noBtn.style.top = top + "px";
+
+    noBtn.textContent = noTexts[Math.min(noCount, noTexts.length - 1)];
+    noCount++;
+    growYes();
+  }
+
+  /* Works on mobile + desktop */
+  noBtn.addEventListener("mouseenter", moveNoRandom);
+  noBtn.addEventListener("touchstart", moveNoRandom);
+  noBtn.addEventListener("click", e => e.preventDefault());
+
+  /* -------- YES CLICK -------- */
+  yesBtn.addEventListener("click", () => {
+    music.play();
+    zone.style.display = "none";
+    hint.style.display = "none";
+    result.style.display = "block";
+    fireConfetti();
+  });
+</script>
+ 
 </body>
+
 </html>
