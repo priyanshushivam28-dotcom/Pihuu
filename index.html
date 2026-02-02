@@ -157,55 +157,78 @@
   </div>
 
   <script>
-    const yes = document.getElementById("yes");
-    const no = document.getElementById("no");
-    const result = document.getElementById("result");
-    const music = document.getElementById("bgMusic");
+  const yes = document.getElementById("yes");
+  const no = document.getElementById("no");
+  const result = document.getElementById("result");
 
-    const songBeforeYes =
-      "https://www.bensound.com/bensound-music/bensound-tenderness.mp3";
-    const songAfterYes =
-      "https://www.bensound.com/bensound-music/bensound-love.mp3";
+  const music = document.getElementById("bgMusic");
+  const catCry = document.getElementById("catCry");
 
-    music.src = songBeforeYes;
-    music.volume = 0.4;
+  /* 🎶 MUSIC */
+  const songBeforeYes =
+    "https://cdn.pixabay.com/audio/2022/10/30/audio_0c7c7b7d4b.mp3";
+  const songAfterYes =
+    "https://cdn.pixabay.com/audio/2023/03/20/audio_9b9b3c3f45.mp3";
 
-    const noTexts = [
-      "No",
-      "Are you sure? 😶",
-      "Really sure? 🥺",
-      "Think again 😭",
-      "Last chance 💔",
-      "Okay okay… Yes ❤️"
-    ];
-    let noCount = 0;
+  music.src = songBeforeYes;
+  music.volume = 0.45;
+  catCry.volume = 0.9;
 
-    function moveNo() {
-      no.style.left = Math.random() * 200 + "px";
-      no.style.top  = Math.random() * 80 + "px";
-      no.textContent = noTexts[Math.min(noCount, noTexts.length - 1)];
-      noCount++;
-      music.pause();
-    }
+  /* 😈 NO BUTTON TEXTS */
+  const noTexts = [
+    "No",
+    "Are you sure? 😶",
+    "Really sure? 🥺",
+    "Think again 😭",
+    "Why you doing this 😿",
+    "Okay okay… Yes ❤️"
+  ];
+  let noCount = 0;
 
-    no.addEventListener("mouseenter", moveNo);
-    no.addEventListener("touchstart", moveNo);
-    no.addEventListener("click", e => e.preventDefault());
+  function moveNo() {
+    // Move button
+    no.style.left = Math.random() * 200 + "px";
+    no.style.top  = Math.random() * 80 + "px";
 
-    yes.addEventListener("click", () => {
-      music.pause();
-      music.src = songAfterYes;
-      music.load();
-      music.play().catch(() => {});
-      result.style.display = "block";
+    // Change text
+    no.textContent = noTexts[Math.min(noCount, noTexts.length - 1)];
+    noCount++;
 
-      confetti({
-        particleCount: 260,
-        spread: 140,
-        origin: { y: 0.6 }
-      });
+    // ⏸ Pause music
+    music.pause();
+
+    // 🐱 Play crying cat sound (restart each time)
+    catCry.currentTime = 0;
+    catCry.play().catch(() => {});
+  }
+
+  no.addEventListener("mouseenter", moveNo);
+  no.addEventListener("touchstart", moveNo);
+  no.addEventListener("click", e => e.preventDefault());
+
+  yes.addEventListener("click", () => {
+    // Stop cat crying 😭
+    catCry.pause();
+    catCry.currentTime = 0;
+
+    // 🎶 Switch to romantic Bollywood music
+    music.pause();
+    music.src = songAfterYes;
+    music.load();
+    music.play().catch(() => {});
+
+    result.style.display = "block";
+
+    confetti({
+      particleCount: 260,
+      spread: 140,
+      origin: { y: 0.6 }
     });
-  </script>
+  });
+</script>
+
+
 
 </body>
 </html>
+
