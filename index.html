@@ -127,10 +127,10 @@
 
 <body>
 
-  <!-- Background music (dynamic) -->
+  <!-- Background music -->
   <audio id="bgMusic" loop preload="auto"></audio>
 
-  <!-- Cat crying meme sound -->
+  <!-- Cat crying sound -->
   <audio id="catCry" preload="auto">
     <source src="https://cdn.pixabay.com/audio/2022/03/15/audio_2d7b7aeb34.mp3" type="audio/mpeg">
   </audio>
@@ -147,7 +147,7 @@
       <button id="no">No</button>
     </div>
 
-    <div id="catText">😿 Cat is disappointed in you</div>
+    <div id="catText">😿 Cat had high hopes. cat is disappointed 😭</div>
 
     <div class="result" id="result">
       <h2 style="font-family:'Playfair Display',serif;">YAY!!! 🎉❤️</h2>
@@ -192,7 +192,9 @@
     ];
     let noCount = 0;
 
-    function moveNo() {
+    function moveNo(e) {
+      if (e) e.preventDefault();
+
       no.style.left = Math.random() * 200 + "px";
       no.style.top  = Math.random() * 80 + "px";
       no.textContent = noTexts[Math.min(noCount, noTexts.length - 1)];
@@ -200,14 +202,15 @@
 
       music.pause();
 
+      // 🐱 CAT CRY (NOW WORKS)
       catCry.currentTime = 0;
       catCry.play().catch(() => {});
       catText.style.display = "block";
     }
 
-    no.addEventListener("mouseenter", moveNo);
+    // ✅ CLICK / TAP ONLY (browser-approved)
+    no.addEventListener("click", moveNo);
     no.addEventListener("touchstart", moveNo);
-    no.addEventListener("click", e => e.preventDefault());
 
     yes.addEventListener("click", () => {
       catCry.pause();
