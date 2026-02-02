@@ -64,20 +64,36 @@
       background: #e5e7eb;
     }
 
-    #result {
+    .result {
       display: none;
       margin-top: 20px;
-      font-size: 26px;
+      animation: pop .4s ease;
+    }
+
+    .result img {
+      width: 100%;
+      max-width: 280px;
+      border-radius: 16px;
+      margin-top: 10px;
+    }
+
+    .result p {
+      font-size: 18px;
+      margin-top: 10px;
+      color: #444;
+    }
+
+    @keyframes pop {
+      from { transform: scale(.95); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
     }
   </style>
 </head>
 
 <body>
 
-  <!-- Background music (SAFE) -->
-  <audio id="bgMusic" loop preload="auto">
-    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
-  </audio>
+  <!-- Audio element (source will change dynamically) -->
+  <audio id="bgMusic" loop preload="auto"></audio>
 
   <div class="card">
     <h1><span>Pihuu</span>, will you be my Valentine? 💖</h1>
@@ -87,7 +103,19 @@
       <button id="no">No</button>
     </div>
 
-    <div id="result">YAY!!! 🎉❤️</div>
+    <div class="result" id="result">
+      <h2>YAY!!! 🎉❤️</h2>
+
+      <img
+        src="https://media.giphy.com/media/26ufdipQqU2lhNA4g/giphy.gif"
+        alt="Fireworks"
+      />
+
+      <p>
+        I don’t just want you as my Valentine today —<br>
+        I want you to be my Valentine for the rest of my life 💖
+      </p>
+    </div>
   </div>
 
   <script>
@@ -96,7 +124,16 @@
     const result = document.getElementById("result");
     const music = document.getElementById("bgMusic");
 
-    /* Text sequence for No button */
+    /* 🎵 SONGS */
+    const songBeforeYes =
+      "https://www.bensound.com/bensound-music/bensound-tenderness.mp3"; // soft
+    const songAfterYes =
+      "https://www.bensound.com/bensound-music/bensound-love.mp3"; // romantic forever
+
+    music.src = songBeforeYes;
+    music.volume = 0.4;
+
+    /* No button text sequence */
     const noTexts = [
       "No",
       "Are you sure? 😶",
@@ -116,16 +153,22 @@
 
       no.textContent = noTexts[Math.min(noCount, noTexts.length - 1)];
       noCount++;
+
+      // ⏸ Pause music when she tries No
+      music.pause();
     }
 
-    /* No button behavior */
     no.addEventListener("mouseenter", moveNo);
     no.addEventListener("touchstart", moveNo);
     no.addEventListener("click", e => e.preventDefault());
 
-    /* Yes button */
     yes.addEventListener("click", () => {
-      music.play().catch(() => {}); // safe audio
+      // 🎶 Change song + play
+      music.pause();
+      music.src = songAfterYes;
+      music.load();
+      music.play().catch(() => {});
+
       result.style.display = "block";
 
       confetti({
