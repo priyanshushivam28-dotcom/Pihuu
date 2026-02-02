@@ -157,76 +157,71 @@
   </div>
 
   <script>
-    const yes = document.getElementById("yes");
-    const no = document.getElementById("no");
-    const result = document.getElementById("result");
-    const music = document.getElementById("bgMusic");
-    const catCry = document.getElementById("catCry");
-    const catText = document.getElementById("catText");
-    const unlock = document.getElementById("unlockSound");
+  const yes = document.getElementById("yes");
+  const no = document.getElementById("no");
+  const catCry = document.getElementById("catCry");
+  const loveMusic = document.getElementById("loveMusic");
+  const catText = document.getElementById("catText");
+  const result = document.getElementById("result");
 
-    let audioUnlocked = false;
+  loveMusic.volume = 0.5;
+  catCry.volume = 1;
 
-    function unlockAudio() {
-      if (!audioUnlocked) {
-        unlock.volume = 0;
-        unlock.play().catch(() => {});
-        audioUnlocked = true;
-      }
-    }
+  const noTexts = [
+    "No",
+    "Are you sure? 😶",
+    "Really sure? 🥺",
+    "Think again 😭",
+    "Why you doing this 😿",
+    "Okay okay… Yes ❤️"
+  ];
+  let noCount = 0;
 
-    const songAfterYes =
-      "https://cdn.pixabay.com/audio/2023/03/20/audio_9b9b3c3f45.mp3";
+  // 🔥 NO CLICK — CAT CRY (100% ALLOWED)
+  no.addEventListener("click", (e) => {
+    e.preventDefault();
 
-    music.volume = 0.45;
-    catCry.volume = 1;
+    // move button
+    no.style.left = Math.random() * 200 + "px";
+    no.style.top  = Math.random() * 80 + "px";
 
-    const noTexts = [
-      "No",
-      "Are you sure? 😶",
-      "Really sure? 🥺",
-      "Think again 😭",
-      "Why you doing this 😿",
-      "Okay okay… Yes ❤️"
-    ];
-    let noCount = 0;
+    // text change
+    no.textContent = noTexts[Math.min(noCount, noTexts.length - 1)];
+    noCount++;
 
-    function moveNo(e) {
-      unlockAudio(); // 🔓 unlock here
+    // stop love music if any
+    loveMusic.pause();
+    loveMusic.currentTime = 0;
 
-      e.preventDefault();
-      no.style.left = Math.random() * 200 + "px";
-      no.style.top  = Math.random() * 80 + "px";
-      no.textContent = noTexts[Math.min(noCount, noTexts.length - 1)];
-      noCount++;
+    // 🐱 PLAY CAT CRY (DIRECT CLICK = ALLOWED)
+    catCry.currentTime = 0;
+    catCry.play();
 
-      catCry.currentTime = 0;
-      catCry.play().catch(() => {});
-      catText.style.display = "block";
-    }
+    catText.style.display = "block";
+  });
 
-    no.addEventListener("click", moveNo);
-    no.addEventListener("touchstart", moveNo);
+  // ❤️ YES CLICK — BOLLYWOOD MUSIC (100% ALLOWED)
+  yes.addEventListener("click", () => {
+    // stop cat
+    catCry.pause();
+    catCry.currentTime = 0;
+    catText.style.display = "none";
 
-    yes.addEventListener("click", () => {
-      unlockAudio(); // 🔓 unlock here too
+    // 🎶 PLAY ROMANTIC MUSIC
+    loveMusic.currentTime = 0;
+    loveMusic.play();
 
-      catCry.pause();
-      catText.style.display = "none";
+    result.style.display = "block";
 
-      music.src = songAfterYes;
-      music.load();
-      music.play().catch(() => {});
-
-      result.style.display = "block";
-
-      confetti({
-        particleCount: 260,
-        spread: 140,
-        origin: { y: 0.6 }
-      });
+    confetti({
+      particleCount: 250,
+      spread: 140,
+      origin: { y: 0.6 }
     });
-  </script>
+  });
+</script>
+
 
 </body>
 </html>
+
