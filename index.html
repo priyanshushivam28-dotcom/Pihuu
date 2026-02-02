@@ -6,7 +6,7 @@
   <title>Pihuu 💖 Valentine</title>
 
   <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
 
   <!-- Confetti -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
@@ -23,7 +23,7 @@
 
     .card {
       background: white;
-      padding: 32px 28px;
+      padding: 34px 28px;
       border-radius: 26px;
       text-align: center;
       width: min(440px, 92vw);
@@ -33,7 +33,7 @@
     h1 {
       font-family: 'Playfair Display', serif;
       font-size: 30px;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
     }
 
     h1 span {
@@ -46,25 +46,24 @@
       to   { text-shadow: 0 0 18px #ff1f68; }
     }
 
-    .p2 {
-      margin-top: 6px;
+    /* 🔥 P² FOREVER BADGE */
+    .p2-badge {
+      display: inline-block;
+      margin: 10px 0 18px;
+      padding: 6px 16px;
       font-size: 18px;
       font-weight: 600;
-      color: #ff3b7a;
-    }
-
-    .p2 span {
       background: linear-gradient(135deg, #ff4d7d, #ff1f68);
       color: white;
-      padding: 4px 10px;
       border-radius: 999px;
-      box-shadow: 0 6px 18px rgba(255,31,104,.35);
+      box-shadow: 0 8px 22px rgba(255,31,104,.4);
+      font-family: 'Poppins', sans-serif;
     }
 
     .zone {
       position: relative;
       height: 140px;
-      margin-top: 24px;
+      margin-top: 20px;
     }
 
     button {
@@ -77,7 +76,6 @@
       font-family: 'Poppins', sans-serif;
       font-weight: 600;
       user-select: none;
-      transition: transform .15s ease;
     }
 
     #yes {
@@ -85,10 +83,6 @@
       background: linear-gradient(135deg, #ff4d7d, #ff1f68);
       color: white;
       box-shadow: 0 10px 26px rgba(255,31,104,.45);
-    }
-
-    #yes:active {
-      transform: scale(.95);
     }
 
     #no {
@@ -110,10 +104,13 @@
       margin-top: 12px;
     }
 
-    .result p {
-      font-size: 17px;
-      margin-top: 14px;
-      line-height: 1.5;
+    /* 💖 QUOTE – DIFFERENT FONT */
+    .quote {
+      margin-top: 16px;
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 18px;
+      line-height: 1.6;
       color: #444;
     }
 
@@ -126,7 +123,7 @@
 
 <body>
 
-  <!-- Audio (dynamic song change) -->
+  <!-- Audio -->
   <audio id="bgMusic" loop preload="auto"></audio>
 
   <div class="card">
@@ -134,8 +131,9 @@
       <span>Pihuu</span>, will you be my Valentine? 💖
     </h1>
 
-    <div class="p2">
-      From us to forever — <span>P<sup>2</sup> Forever</span>
+    <!-- ✅ P² FOREVER NOW CLEAR -->
+    <div class="p2-badge">
+      P<sup>2</sup> Forever ♾️
     </div>
 
     <div class="zone">
@@ -151,10 +149,10 @@
         alt="Fireworks"
       />
 
-      <p>
+      <div class="quote">
         I don’t just want you as my Valentine today —<br>
         I want you to be my Valentine for the rest of my life 💖
-      </p>
+      </div>
     </div>
   </div>
 
@@ -183,15 +181,10 @@
     let noCount = 0;
 
     function moveNo() {
-      const x = Math.random() * 200;
-      const y = Math.random() * 80;
-
-      no.style.left = x + "px";
-      no.style.top = y + "px";
-
+      no.style.left = Math.random() * 200 + "px";
+      no.style.top  = Math.random() * 80 + "px";
       no.textContent = noTexts[Math.min(noCount, noTexts.length - 1)];
       noCount++;
-
       music.pause();
     }
 
@@ -204,7 +197,6 @@
       music.src = songAfterYes;
       music.load();
       music.play().catch(() => {});
-
       result.style.display = "block";
 
       confetti({
