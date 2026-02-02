@@ -46,18 +46,16 @@
       to   { text-shadow: 0 0 18px #ff1f68; }
     }
 
-    /* 🔥 P² FOREVER BADGE */
     .p2-badge {
       display: inline-block;
       margin: 10px 0 18px;
-      padding: 6px 16px;
+      padding: 6px 18px;
       font-size: 18px;
       font-weight: 600;
       background: linear-gradient(135deg, #ff4d7d, #ff1f68);
       color: white;
       border-radius: 999px;
       box-shadow: 0 8px 22px rgba(255,31,104,.4);
-      font-family: 'Poppins', sans-serif;
     }
 
     .zone {
@@ -91,6 +89,13 @@
       color: #333;
     }
 
+    #catText {
+      display: none;
+      margin-top: 12px;
+      font-size: 16px;
+      color: #555;
+    }
+
     .result {
       display: none;
       margin-top: 22px;
@@ -104,7 +109,6 @@
       margin-top: 12px;
     }
 
-    /* 💖 QUOTE – DIFFERENT FONT */
     .quote {
       margin-top: 16px;
       font-family: 'Playfair Display', serif;
@@ -123,15 +127,17 @@
 
 <body>
 
-  <!-- Audio -->
+  <!-- Background music (dynamic) -->
   <audio id="bgMusic" loop preload="auto"></audio>
 
-  <div class="card">
-    <h1>
-      <span>Pihuu</span>, will you be my Valentine? 💖
-    </h1>
+  <!-- Cat crying meme sound -->
+  <audio id="catCry" preload="auto">
+    <source src="https://cdn.pixabay.com/audio/2022/03/15/audio_2d7b7aeb34.mp3" type="audio/mpeg">
+  </audio>
 
-    <!-- ✅ P² FOREVER NOW CLEAR -->
+  <div class="card">
+    <h1><span>Pihuu</span>, will you be my Valentine? 💖</h1>
+
     <div class="p2-badge">
       P<sup>2</sup> Forever ♾️
     </div>
@@ -140,6 +146,8 @@
       <button id="yes">Yes</button>
       <button id="no">No</button>
     </div>
+
+    <div id="catText">😿 Cat is disappointed in you</div>
 
     <div class="result" id="result">
       <h2 style="font-family:'Playfair Display',serif;">YAY!!! 🎉❤️</h2>
@@ -157,78 +165,69 @@
   </div>
 
   <script>
-  const yes = document.getElementById("yes");
-  const no = document.getElementById("no");
-  const result = document.getElementById("result");
+    const yes = document.getElementById("yes");
+    const no = document.getElementById("no");
+    const result = document.getElementById("result");
+    const music = document.getElementById("bgMusic");
+    const catCry = document.getElementById("catCry");
+    const catText = document.getElementById("catText");
 
-  const music = document.getElementById("bgMusic");
-  const catCry = document.getElementById("catCry");
+    /* 🎶 MUSIC */
+    const songBeforeYes =
+      "https://cdn.pixabay.com/audio/2022/10/30/audio_0c7c7b7d4b.mp3";
+    const songAfterYes =
+      "https://cdn.pixabay.com/audio/2023/03/20/audio_9b9b3c3f45.mp3";
 
-  /* 🎶 MUSIC */
-  const songBeforeYes =
-    "https://cdn.pixabay.com/audio/2022/10/30/audio_0c7c7b7d4b.mp3";
-  const songAfterYes =
-    "https://cdn.pixabay.com/audio/2023/03/20/audio_9b9b3c3f45.mp3";
+    music.src = songBeforeYes;
+    music.volume = 0.45;
+    catCry.volume = 0.9;
 
-  music.src = songBeforeYes;
-  music.volume = 0.45;
-  catCry.volume = 0.9;
+    const noTexts = [
+      "No",
+      "Are you sure? 😶",
+      "Really sure? 🥺",
+      "Think again 😭",
+      "Why you doing this 😿",
+      "Okay okay… Yes ❤️"
+    ];
+    let noCount = 0;
 
-  /* 😈 NO BUTTON TEXTS */
-  const noTexts = [
-    "No",
-    "Are you sure? 😶",
-    "Really sure? 🥺",
-    "Think again 😭",
-    "Why you doing this 😿",
-    "Okay okay… Yes ❤️"
-  ];
-  let noCount = 0;
+    function moveNo() {
+      no.style.left = Math.random() * 200 + "px";
+      no.style.top  = Math.random() * 80 + "px";
+      no.textContent = noTexts[Math.min(noCount, noTexts.length - 1)];
+      noCount++;
 
-  function moveNo() {
-    // Move button
-    no.style.left = Math.random() * 200 + "px";
-    no.style.top  = Math.random() * 80 + "px";
+      music.pause();
 
-    // Change text
-    no.textContent = noTexts[Math.min(noCount, noTexts.length - 1)];
-    noCount++;
+      catCry.currentTime = 0;
+      catCry.play().catch(() => {});
+      catText.style.display = "block";
+    }
 
-    // ⏸ Pause music
-    music.pause();
+    no.addEventListener("mouseenter", moveNo);
+    no.addEventListener("touchstart", moveNo);
+    no.addEventListener("click", e => e.preventDefault());
 
-    // 🐱 Play crying cat sound (restart each time)
-    catCry.currentTime = 0;
-    catCry.play().catch(() => {});
-  }
+    yes.addEventListener("click", () => {
+      catCry.pause();
+      catCry.currentTime = 0;
+      catText.style.display = "none";
 
-  no.addEventListener("mouseenter", moveNo);
-  no.addEventListener("touchstart", moveNo);
-  no.addEventListener("click", e => e.preventDefault());
+      music.pause();
+      music.src = songAfterYes;
+      music.load();
+      music.play().catch(() => {});
 
-  yes.addEventListener("click", () => {
-    // Stop cat crying 😭
-    catCry.pause();
-    catCry.currentTime = 0;
+      result.style.display = "block";
 
-    // 🎶 Switch to romantic Bollywood music
-    music.pause();
-    music.src = songAfterYes;
-    music.load();
-    music.play().catch(() => {});
-
-    result.style.display = "block";
-
-    confetti({
-      particleCount: 260,
-      spread: 140,
-      origin: { y: 0.6 }
+      confetti({
+        particleCount: 260,
+        spread: 140,
+        origin: { y: 0.6 }
+      });
     });
-  });
-</script>
-
-
+  </script>
 
 </body>
 </html>
-
