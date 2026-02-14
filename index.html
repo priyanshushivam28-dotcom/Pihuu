@@ -80,6 +80,7 @@
       left: 28px;
       background: linear-gradient(135deg, #ff4d7d, #ff1f68);
       color: white;
+      box-shadow: 0 10px 26px rgba(255,31,104,.45);
     }
 
     #no {
@@ -88,16 +89,10 @@
       color: #333;
     }
 
-    #catText {
-      display: none;
-      margin-top: 12px;
-      font-size: 16px;
-      color: #555;
-    }
-
     .result {
       display: none;
       margin-top: 22px;
+      animation: pop .4s ease;
     }
 
     .result img {
@@ -115,39 +110,40 @@
       line-height: 1.6;
       color: #444;
     }
+
+    @keyframes pop {
+      from { transform: scale(.95); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
   </style>
 </head>
 
 <body>
 
-  <!-- 🎵 Audio Elements -->
-  <audio id="bgMusic" loop preload="auto"></audio>
-
-  <audio id="catCry" preload="auto">
-    <source src="https://cdn.pixabay.com/audio/2022/03/15/audio_2d7b7aeb34.mp3" type="audio/mpeg">
-  </audio>
-
-  <!-- 🔓 Silent unlock sound -->
-  <audio id="unlockSound">
-    <source src="https://cdn.pixabay.com/audio/2021/08/04/audio_0625caa3b7.mp3" type="audio/mpeg">
+  <!-- 🎶 HIDDEN AUDIO (NO CONTROLS, NO BUTTON) -->
+  <audio id="loveMusic" preload="auto">
+    <source src="Kalank.mp3" type="audio/mpeg">
   </audio>
 
   <div class="card">
     <h1><span>Pihuu</span>, will you be my Valentine? 💖</h1>
 
-    <div class="p2-badge">P<sup>2</sup> Forever ♾️</div>
+    <div class="p2-badge">
+      P<sup>2</sup> Forever ♾️
+    </div>
 
     <div class="zone">
       <button id="yes">Yes</button>
       <button id="no">No</button>
     </div>
 
-    <div id="catText">😿 Cat is not mad, Just disappointed 😭</div>
-
     <div class="result" id="result">
-      <h2>YAY!!! 🎉❤️</h2>
+      <h2 style="font-family:'Playfair Display',serif;">YAY!!! 🎉❤️</h2>
 
-      <img src="https://media.giphy.com/media/26ufdipQqU2lhNA4g/giphy.gif">
+      <img
+        src="https://media.giphy.com/media/26ufdipQqU2lhNA4g/giphy.gif"
+        alt="Fireworks"
+      />
 
       <div class="quote">
         I don’t just want you as my Valentine today —<br>
@@ -157,71 +153,48 @@
   </div>
 
   <script>
-  const yes = document.getElementById("yes");
-  const no = document.getElementById("no");
-  const catCry = document.getElementById("catCry");
-  const loveMusic = document.getElementById("loveMusic");
-  const catText = document.getElementById("catText");
-  const result = document.getElementById("result");
+    const yes = document.getElementById("yes");
+    const no = document.getElementById("no");
+    const result = document.getElementById("result");
+    const music = document.getElementById("loveMusic");
 
-  loveMusic.volume = 0.5;
-  catCry.volume = 1;
+    music.volume = 0.6;
 
-  const noTexts = [
-    "No",
-    "Are you sure? 😶",
-    "Really sure? 🥺",
-    "Think again 😭",
-    "Why you doing this 😿",
-    "Okay okay… Yes ❤️"
-  ];
-  let noCount = 0;
+    const noTexts = [
+      "No",
+      "Are you sure? 😶",
+      "Really sure? 🥺",
+      "Think again 😭",
+      "Last chance 💔",
+      "Okay okay… Yes ❤️"
+    ];
+    let noCount = 0;
 
-  // 🔥 NO CLICK — CAT CRY (100% ALLOWED)
-  no.addEventListener("click", (e) => {
-    e.preventDefault();
+    function moveNo(e) {
+      e.preventDefault();
+      no.style.left = Math.random() * 200 + "px";
+      no.style.top  = Math.random() * 80 + "px";
+      no.textContent = noTexts[Math.min(noCount, noTexts.length - 1)];
+      noCount++;
+    }
 
-    // move button
-    no.style.left = Math.random() * 200 + "px";
-    no.style.top  = Math.random() * 80 + "px";
+    no.addEventListener("click", moveNo);
+    no.addEventListener("touchstart", moveNo);
 
-    // text change
-    no.textContent = noTexts[Math.min(noCount, noTexts.length - 1)];
-    noCount++;
+    yes.addEventListener("click", () => {
+      // 🎶 Music plays ONLY after YES (browser-safe)
+      music.currentTime = 0;
+      music.play().catch(() => {});
 
-    // stop love music if any
-    loveMusic.pause();
-    loveMusic.currentTime = 0;
+      result.style.display = "block";
 
-    // 🐱 PLAY CAT CRY (DIRECT CLICK = ALLOWED)
-    catCry.currentTime = 0;
-    catCry.play();
-
-    catText.style.display = "block";
-  });
-
-  // ❤️ YES CLICK — BOLLYWOOD MUSIC (100% ALLOWED)
-  yes.addEventListener("click", () => {
-    // stop cat
-    catCry.pause();
-    catCry.currentTime = 0;
-    catText.style.display = "none";
-
-    // 🎶 PLAY ROMANTIC MUSIC
-    loveMusic.currentTime = 0;
-    loveMusic.play();
-
-    result.style.display = "block";
-
-    confetti({
-      particleCount: 250,
-      spread: 140,
-      origin: { y: 0.6 }
+      confetti({
+        particleCount: 260,
+        spread: 140,
+        origin: { y: 0.6 }
+      });
     });
-  });
-</script>
-
+  </script>
 
 </body>
 </html>
-
